@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planet Weight Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('slider3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #E69533;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 95%;
+            margin: auto;
+            color: #E69533; /* Matching primary text */
+            text-shadow: 2px 2px 4px #15000f; /* Deep contrast shadow */
+        }
+        h1, h2 {
+            color: #E69533; /* Bright contrast for headings */
+        }
+        p {
+            color: #E69533; /* Subtle contrast for paragraph text */
+        }
+        .planets-grid {
+            display: none; /* Initially hidden */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .planet {
+            padding: 15px;
+            border: 1px solid #fff;
+            background-color: rgba(28, 12, 24, 0.6);
+            text-align: center;
+            border-radius: 10px;
+        }
+        .planet h2 {
+            color: #E69533; /* Keeping heading color consistent */
+        }
+        .planet p {
+            color: #E69533; /* Subtle contrast text */
+        }
+        .planet img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #ffffff; /* Deep contrast background */
+            color: #000000; /* Bright text */
+            border: 1px solid #24141f; /* Border for visibility */
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Planet Weight Calculator</h1>
+        <input type="number" id="weightInput" placeholder="Enter your weight (kg)" oninput="checkInput()">
+        <button onclick="calculateWeight()">Submit</button>
+        <div id="planetsContainer" class="planets-grid"></div>
+    </div>
+
+    <script>
+        const planets = [
+        { id: "mercury", name: "Mercury", diameter: "4,880 km", description: "1st Planet of the Solar System", gravity: 0.38, image: "mercury.jpg" },
+            { id: "venus", name: "Venus", diameter: "12,103.6 km", description: "Most Brightest Planet", gravity: 0.91, image: "venus.jpg" },
+            { id: "moon", name: "The Moon", diameter: "3,476 km", description: "Satellite - 2024 Artemis Program", gravity: 0.165, image: "moon.jpg" },
+            { id: "mars", name: "Mars", diameter: "6,794 km", description: "Red Planet - Humanity's 2nd Home", gravity: 0.38, image: "mars.jpg" },
+            { id: "jupiter", name: "Jupiter", diameter: "142,984 km", description: "Failed Star - Biggest Planet", gravity: 2.34, image: "jupiter.jpg" },
+            { id: "saturn", name: "Saturn", diameter: "120,536 km", description: "Lowest Density - Seven Large Rings", gravity: 1.06, image: "saturn.jpg" },
+            { id: "uranus", name: "Uranus", diameter: "51,118 km", description: "Discoverer: William Herschel", gravity: 0.92, image: "uranus.jpg" },
+            { id: "neptune", name: "Neptune", diameter: "49,532 km", description: "Mass: 17x Earth", gravity: 1.19, image: "neptune.jpg" },
+            { id: "pluto", name: "Pluto", diameter: "2,274 km", description: "Kuiper Belt - Our Favorite Dwarf Planet", gravity: 0.06, image: "pluto.jpg" },
+            { id: "sun", name: "The Sun", diameter: "1.3927 million km", description: "Father of Solar System - 99.8% mass", gravity: 27.9, image: "sun.jpg" },
+            { id: "phobos", name: "Phobos", diameter: "22.533 km", description: "Satellite of Mars", gravity: 0.0057, image: "phobos.jpg" },
+            { id: "deimos", name: "Deimos", diameter: "22.533 km", description: "Satellite of Mars", gravity: 0.003, image: "deimos.jpg" },
+            { id: "ceres", name: "Ceres", diameter: "946 km", description: "Dwarf Planet - Asteroid Belt", gravity: 0.029, image: "ceres.jpg" },
+            { id: "io", name: "Io", diameter: "3,643.2 km", description: "Jupiter I - Galilean Moon", gravity: 0.183, image: "io.jpg" },
+            { id: "europa", name: "Europa", diameter: "3,121.6 km", description: "Jupiter II - Galilean Moon", gravity: 0.134, image: "europa.jpg" },
+            { id: "ganymede", name: "Ganymede", diameter: "5,268.2 km", description: "Jupiter III - Galilean Moon", gravity: 0.146, image: "ganymede.jpg" },
+            { id: "callisto", name: "Callisto", diameter: "4,820.6 km", description: "Jupiter IV - Galilean Moon", gravity: 0.126, image: "callisto.jpg" },
+            { id: "titan", name: "Titan", diameter: "5,149.5 km", description: "Largest Moon of Saturn", gravity: 0.138, image: "titan.jpg" },
+            { id: "enceladus", name: "Enceladus", diameter: "504.2 km", description: "Moon of Saturn - Highest Albedo", gravity: 0.113, image: "enceladus.jpg" },
+            { id: "triton", name: "Triton", diameter: "2,706.8 km", description: "Largest Natural Satellite of Neptune", gravity: 0.079, image: "triton.jpg" },
+            { id: "eris", name: "Eris", diameter: "2,326 km", description: "Dwarf Planet - Scattered Disk", gravity: 0.08, image: "eris.jpg" },
+            { id: "67p", name: "67P-CG", diameter: "4 km", description: "Jupiter-family Comet - 6.45 Year Orbit", gravity: 0.0001, image: "67p.jpg" }
+        ];
+        function createPlanetElements() {
+            let container = document.getElementById("planetsContainer");
+            container.innerHTML = ""; // Clear previous content
+            planets.forEach(planet => {
+                let div = document.createElement("div");
+                div.classList.add("planet");
+                div.id = planet.id;
+                div.innerHTML = `
+                    <img src="${planet.image}" alt="${planet.name}">
+                    <h2>${planet.name}</h2>
+                    <p>Diameter: ${planet.diameter}</p>
+                    <p>${planet.description}</p>
+                    <p>Your Weight: <span id="weight${planet.id}"></span> kg</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+        function calculateWeight() {
+            let weight = document.getElementById("weightInput").value;
+            let container = document.getElementById("planetsContainer");
+            if (weight > 0) {
+                container.style.display = "grid"; // Show results
+                planets.forEach(planet => document.getElementById("weight" + planet.id).textContent = (weight * planet.gravity).toFixed(2));
+            } else {
+                container.style.display = "none"; // Hide if invalid input
+            }
+        }
+
+        function checkInput() {
+            let weight = document.getElementById("weightInput").value;
+            let container = document.getElementById("planetsContainer");
+
+            if (weight.trim() === "" || isNaN(weight) || weight <= 0) {
+                container.style.display = "none"; // Hide results
+            }
+        }
+        createPlanetElements();
+    </script>
+</body>
+</html>

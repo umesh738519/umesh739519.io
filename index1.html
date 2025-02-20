@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Your Weight On Other Celestial Objects</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('slider2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 80%;
+            margin: 30px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .heading {
+            color: #f5840c;
+            text-shadow: 2px 2px 4px #000;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .paragraph {
+            font-size: 20px;
+            color: #f5840c;
+            text-shadow: 2px 2px 4px #000;
+            max-width: 70%;
+            margin: 10px auto;
+            line-height: 1.6;
+        }
+        .form-container {
+            max-width: 60%;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin: 15px 0;
+            text-align: left;
+            color: #ff9800;
+        }
+        label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #f5840c;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: #f9fdffec;
+            color: #3f3527;
+        }
+        input:focus, select:focus {
+            outline: 2px solid #f5840c;
+            background: rgba(255, 255, 255, 0.4);
+        }
+        ::placeholder {
+            color: #251f16;
+        }
+        #otherProfessionField {
+            display: none;
+        }
+        button {
+            background: #f5840c;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #ff9800;
+        }
+        @media (max-width: 768px) {
+            .container {
+                max-width: 90%;
+            }
+            .paragraph {
+                max-width: 90%;
+            }
+            .form-container {
+                max-width: 80%;
+            }
+            input, select, button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Heading -->
+    <div class="container">
+        <h1 class="heading">Check Your Weight On Other Celestial Objects</h1>
+    </div>
+
+    <!-- Informational Paragraph -->
+    <div class="container">
+        <p class="paragraph">
+            If a person weighs 100 kg on Earth, he will feel 90.7 kg on Venus, the same person will weigh 16.6 kg on the Earth's satellite moon. This will be because the weight of the object is determined by the gravitational force exerted on it. In low gravity, weight is low and more on high.
+        </p>
+    </div>
+
+    <!-- Form Section -->
+    <div class="form-container">
+        <form id="userForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone No</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" placeholder="Enter your city" required>
+            </div>
+            <div class="form-group">
+                <label for="profession">Profession</label>
+                <select id="profession" name="profession" onchange="toggleOtherField()" required>
+                    <option value="">Select</option>
+                    <option value="business">Business</option>
+                    <option value="home_maker">Home Maker</option>
+                    <option value="student">Student</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group" id="otherProfessionField">
+                <label for="otherProfession">Specify Your Profession</label>
+                <input type="text" id="otherProfession" name="otherProfession" placeholder="Enter your profession">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        function toggleOtherField() {
+            let profession = document.getElementById("profession").value;
+            let otherField = document.getElementById("otherProfessionField");
+            if (profession === "other") {
+                otherField.style.display = "block";
+                document.getElementById("otherProfession").setAttribute("required", "true");
+            } else {
+                otherField.style.display = "none";
+                document.getElementById("otherProfession").removeAttribute("required");
+            }
+        }
+
+        document.getElementById("userForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(this);
+            let scriptURL = "https://script.google.com/macros/s/AKfycby5RcvgbDlaCi2muDcMM5NKd202BLkyITakVEkL7IvExxZpqPySXmOvAFPSrzegR7Gi/exec";
+
+            fetch(scriptURL, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert("Form submitted successfully!");
+                window.location.href = "index2.html";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Submission failed. Please try again.");
+            });
+        });
+    </script>
+</body>
+</html>
